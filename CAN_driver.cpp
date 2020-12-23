@@ -7,6 +7,7 @@ can_message_t tx_msg, rx_msg;
 bool interupt_on;
 uint8_t CAN_recieve_arr[8];
 uint8_t CAN_read_arr[8];
+uint8_t R_PID_g;
 /***********************************/
 
 
@@ -74,21 +75,19 @@ uint8_t* CAN_read(uint8_t R_PID)
   //R_PID : 값을읽어오고자하는 MD_450T의 PID(파라미터 id)
 
   interupt_on=false;
-   
-  //uint8_t CAN_recieved[8]={0,0,0,0,0,0,0,0};
+  R_PID_g=R_PID;                                        //전역변수 R_PID_g에 R_PID를 저장
   uint8_t arr_[8]={PID_REQ_PID_DATA,R_PID,0,0,0,0,0,0};
   
-  CanBus.attachRxInterrupt(canRxHandlerTemplate); //리턴메시지를 수신할 때까지 계속 검사한다.
+  CanBus.attachRxInterrupt(canRxHandlerTemplate);       //리턴메시지를 수신할 때까지 계속 검사한다.
+  
   interupt_on=true;
   CAN_write(arr_);
 
   if(!interupt_on){
-    
     return CAN_read_arr;
   }
   
 }
-
 
 void canRxHandlerTemplate(can_message_t *arg)
 {
