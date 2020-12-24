@@ -7,7 +7,7 @@ can_message_t tx_msg, rx_msg;
 bool interupt_on;
 uint8_t CAN_recieve_arr[8];
 uint8_t CAN_read_arr[8];
-uint8_t R_PID_g;
+uint8_t R_PID_g;  //R_PID를 저장하는 전역변수 선언
 /***********************************/
 
 
@@ -93,14 +93,17 @@ void canRxHandlerTemplate(can_message_t *arg)
 {
   int i=0;
   if(CanBus.readMessage(&rx_msg)){
+    if(rx_msg.data[0]=R_PID_g){
     
-      for(i=0;i<8;i++)
-      {
-        CAN_read_arr[i]=rx_msg.data[i];
-      }     
+        for(i=0;i<8;i++)
+        {
+          CAN_read_arr[i]=rx_msg.data[i];
+        }     
     
-      CanBus.detachRxInterrupt();  //리턴메시지를 수신하면 인터럽트를 종료한다.
-      interupt_on=false;
+        CanBus.detachRxInterrupt();  //리턴메시지를 수신하면 인터럽트를 종료한다.
+        interupt_on=false;
+
+    }
   }
         
 }
